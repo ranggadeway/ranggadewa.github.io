@@ -148,20 +148,28 @@
         </div>
         <div class="row justify-content-center">
           <div class="col-md-7">
-            <form>
+            <div class="alert alert-warning alert-dismissible fade show text-center d-none my-alert" style="background-color: #dadada" role="alert">
+              <strong>Terima Kasih!</strong> pesan kamu sudah kami terima.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <form name="contact-form-ranggadeway">
               <div class="mb-3">
                 <label for="name" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="name" aria-describedby="name" />
+                <input type="text" class="form-control" id="name" aria-describedby="name" name="nama" />
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="email" />
+                <input type="email" class="form-control" id="email" aria-describedby="email" name="email" />
               </div>
               <div class="mb-3">
                 <label for="pesan" class="form-label">Pesan</label>
-                <textarea class="form-control" id="pesan" rows="5"></textarea>
+                <textarea class="form-control" id="pesan" rows="5" name="pesan"></textarea>
               </div>
-              <button type="submit" class="btn mb-5" style="color: #fff; background-color: #808080">Kirim</button>
+              <button type="submit" class="btn btn-kirim" style="color: #fff; background-color: #808080">Kirim</button>
+              <button class="btn btn-loading d-none" style="background-color: #dadada" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -170,7 +178,7 @@
     <!-- akhir contact -->
 
     <!-- footer -->
-    <footer class="text-white text-center pb-1 pt-3">
+    <footer class="text-white text-center pb-1 pt-3 mt-5">
       <p>
         Created with
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-half text-danger" viewBox="0 0 16 16">
@@ -182,6 +190,37 @@
       </p>
     </footer>
     <!-- akhir footer -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
+    <!-- form -->
+    <script>
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxYI_xT_-C-VoI8E0-RorIZKEhcxUMrnw3E0PMzL8Vunph90YcI7gk1DouuySxy45bcCw/exec';
+      const form = document.forms['contact-form-ranggadeway'];
+      const btnKirim = document.querySelector('.btn-kirim');
+      const btnLoading = document.querySelector('.btn-loading');
+      const myAlert = document.querySelector('.my-alert');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // ketika tombol submit diklik
+        // tampilkan tombol loading, hilangkan tombol kirim
+        btnLoading.classList.toggle('d-none');
+        btnKirim.classList.toggle('d-none');
+        fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+          .then((response) => {
+            console.log('Success!', response);
+            // tampilkan tombol kirim, hilangkan tombol loading
+            btnLoading.classList.toggle('d-none');
+            btnKirim.classList.toggle('d-none');
+            // memunculkan tanda kalau sudah terkirim
+            myAlert.classList.toggle('d-none');
+            // reset formnya
+            form.reset();
+          })
+          .catch((error) => console.error('Error!', error.message));
+      });
+    </script>
+    <!-- akhir form -->
   </body>
 </html>
